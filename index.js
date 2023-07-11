@@ -10,10 +10,6 @@ const upload = multer({ dest: 'uploads/' }); // Set the destination directory fo
 
 const port = 3000;
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-}); 
-
 app.get('/', (req, res) => {
   res.send('XLSX-Mongo API');
 });
@@ -73,4 +69,6 @@ app.post('/add', upload.single('file'), async (req, res) => {
   }
 });
 
-module.exports = app;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+}); 

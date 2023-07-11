@@ -8,6 +8,10 @@ const fs = require('fs');
 const app = express();
 const upload = multer({ dest: 'uploads/' }); // Set the destination directory for uploaded files
 
+app.get('/', (req, res) => {
+  res.send('XLSX-Mongo API');
+});
+
 app.post('/import', upload.single('file'), async (req, res) => {
   try {
     const filePath = req.file.path;

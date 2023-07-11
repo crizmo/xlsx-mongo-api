@@ -60,7 +60,7 @@ const FormData = require('form-data');
 const fs = require('fs');
 
 const path = require('path');
-const filePath = path.join(__dirname, 'Test.xlsx');
+const filePath = path.join('Test.xlsx');
 
 require('dotenv').config();
 
@@ -95,6 +95,70 @@ const addData = async () => {
 
     const response = await axios.post('http://localhost:3000/add', formData, {
       headers: formData.getHeaders(),
+    });
+
+    console.log(response.data);
+  } catch (error) {
+    console.error(error.response.data);
+  }
+};
+
+addData();
+```
+
+Example using RapidAPI:
+
+```javascript
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+
+const path = require('path');
+const filePath = path.join('Test.xlsx');
+
+require('dotenv').config();
+
+// Import data from XLSX file to MongoDB
+const importFile = async () => {
+  try {
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream('Test.xlsx'));
+    formData.append('mongoURL', process.env.MONGO_URL);
+    formData.append('collectionName', process.env.MONGO_COLLECTION);
+
+    const response = await axios.post('http://localhost:3000/import', formData, {
+      headers: {
+        'content-type': `multipart/form-data; boundary=${formData._boundary}`,
+        'x-rapidapi-key': 'YOUR-RAPIDAPI-KEY',
+        'x-rapidapi-host': 'xlsx-mongo-api.p.rapidapi.com',
+        useQueryString: true,
+      },
+    });
+
+    console.log(response.data);
+  } catch (error) {
+    console.error(error.response.data);
+  }
+};
+
+importFile();
+
+// Add data from XLSX file to existing MongoDB collection
+const addData = async () => {
+  try {
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream('Test.xlsx'));
+    formData.append('path', filePath);
+    formData.append('collectionName', 'test2');
+    formData.append('mongoURL', process.env.MONGO_URL);
+
+    const response = await axios.post('http://localhost:3000/add', formData, {
+      headers: {
+        'content-type': `multipart/form-data; boundary=${formData._boundary}`,
+        'x-rapidapi-key': 'YOUR-RAPIDAPI-KEY',
+        'x-rapidapi-host': 'xlsx-mongo-api.p.rapidapi.com',
+        useQueryString: true,
+      },
     });
 
     console.log(response.data);

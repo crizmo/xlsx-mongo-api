@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const xlsx2mongo = require('xlsx-mongo');
 const mongoose = require('mongoose');
-require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 
@@ -68,3 +67,5 @@ app.post('/add', upload.single('file'), async (req, res) => {
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+
+module.exports = app;

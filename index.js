@@ -45,14 +45,13 @@ app.post('/import', upload.single('file'), async (req, res) => {
 app.post('/add', upload.single('file'), async (req, res) => {
   try {
     const filePath = req.file.path;
-    const pathmain = req.body.path;
 
     mongoose.connect(req.body.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
     let collectionName = req.body.collectionName || path.basename(filePath, '.xlsx'); // Use the file name as the collection name if not specified
 
-    await xlsx2mongo.init(pathmain);
-    await xlsx2mongo.add(collectionName, pathmain);
+    await xlsx2mongo.init(filePath);
+    await xlsx2mongo.add(collectionName, filePath);
 
     fs.unlink(filePath, (err) => {
       if (err) {

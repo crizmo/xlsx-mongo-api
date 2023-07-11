@@ -34,7 +34,7 @@ app.post('/import', upload.single('file'), async (req, res) => {
       }
     });
 
-    res.status(200).json({ message: 'Data imported successfully' });
+    res.status(200).json({ message: 'Done' });
 
   } catch (error) {
     console.error(error);

@@ -1,222 +1,144 @@
-<a name="readme-top"></a>
-
-<br />
 <div align="center">
-  <a href="https://github.com/crizmo/xlsx-mongo">
-    <img src="https://cdn.discordapp.com/attachments/1126788880906080366/1126788914137546792/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-  <h3 align="center">XLSX-Mongo</h3>
-  <p align="center">
-    <a href="https://www.npmjs.com/package/xlsx-mongo"><img src="https://img.shields.io/npm/v/xlsx-mongo.svg?maxAge=3600&style=for-the-badge" alt="NPM version" /></a>
-    <a href="https://www.npmjs.com/package/xlsx-mongo"><img src="https://img.shields.io/npm/dt/xlsx-mongo?style=for-the-badge" /></a>
-    <a href="https://www.npmjs.com/package/xlsx-mongo"><img src="https://img.shields.io/npm/l/xlsx-mongo?style=for-the-badge" /></a>
-  </p>
-  <p align="center">
-    Import / Add data from xlsx file to mongodb
-    <br />
-    <a href="https://github.com/crizmo/xlsx-mongo"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/crizmo/xlsx-mongo">View Demo</a>
-    ·
-    <a href="https://github.com/crizmo/xlsx-mongo/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/crizmo/xlsx-mongo/issues">Request Feature</a>
-  </p>
+  <h1>xlsx-mongo-api</h1>
+  <p>A RESTful API for importing and adding data from XLSX files to MongoDB</p>
+  <a href="https://github.com/crizmo/xlsx-mongo-api"><img src="https://img.shields.io/github/license/crizmo/xlsx-mongo-api?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/crizmo/xlsx-mongo-api"><img src="https://img.shields.io/github/stars/crizmo/xlsx-mongo-api?style=for-the-badge" alt="Stars"></a>
+  <a href="https://github.com/crizmo/xlsx-mongo-api"><img src="https://img.shields.io/github/issues/crizmo/xlsx-mongo-api?style=for-the-badge" alt="Issues"></a>
 </div>
-    
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#functions">Functions</a></li>
-        <li><a href="#usage">Usage</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
-
-
-<!-- ABOUT THE PROJECT -->
 ## About The Project
+`xlsx-mongo-api` is a RESTful API built with Node.js and Express that allows you to import and add data from XLSX files to MongoDB. It serves as a convenient interface for utilizing the `xlsx-mongo` package.
 
-Import / Add data from xlsx file to mongodb
-- How it works <br>
-Excel file is converted to json and then the json is imported to mongodb. <br>
-Importing to mongodb is done using mongoose. <br>
-- Why use it <br>
-It is useful when you have a lot of data in excel file and you want to import it to mongodb. <br>
-- How to use it <br>
-Check the usage section for more info. <br>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+## Features
+- Import data from XLSX file to MongoDB
+- Add data from XLSX file to existing MongoDB collection
+- Dynamic generation of MongoDB schema based on XLSX file headers
+- Configurable MongoDB connection URL and collection name
+- Support for handling large XLSX files
 
 ## Getting Started
+### Prerequisites
+- Node.js and npm installed on your machine
+- MongoDB server up and running
+- XLSX files with data to import
 
-1. Make a mongodb database
-2. Copy the connection string of the database
-3. Paste the connection string in the .env file named `MONGO_URL`
-4. Run the desired function
-5. Check env_example file for more info - <a href="/tests/.env_example">env_example</a>
-6. Install the required packages - `mongoose , exceljs , dotenv , path`
-7. Install the package <br>
-   ```sh
-   npm install xlsx-mongo
-   ```
-8. Require the package in your main file <br>
-   ```JS
-   const xlsxMongo = require('xlsx-mongo');
-   ```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### API Endpoints
 
-## Functions
+1. POST /import
+  - Description: Import data from an XLSX file to MongoDB
+  - Request Parameters: <br>
+      1. file (multipart/form-data): XLSX file to import <br>
+      2. collectionName (optional): Name of the collection to import/add the data to.<br> If not provided, it will use the filename as the collection name.<br><br>
+  - Response: JSON response with a success message or error message
 
-```javascript
+2. POST /add
+  - Description: Add data from an XLSX file to an existing MongoDB collection
+  - Request Parameters: <br>
+      1. file (multipart/form-data): XLSX file to import <br>
+      2. collectionName (optional): Name of the collection to import/add the data to.<br> If not provided, it will use the filename as the collection name.<br><br>
+  - Response: JSON response with a success message or error message
 
-const xlsx2mongo = require('xlsx-mongo');
-const mongoose = require('mongoose');
-require('dotenv').config()
+### Usage
+1. Start the server by running npm start.
 
-const path = require('path');
-const filePath = path.join(__dirname, 'Test2.xlsx'); // Path to the excel file
+2. Send a POST request to http://localhost:3000/import with the following parameters:
 
-xlsx2mongo.init(filePath);
-// Init function is used to setup the file path
+  1. file: The XLSX file to import.
+  2. collectionName (optional): The name of the collection to import/add the data to.<br> If not provided, it will use the filename as the collection name.
 
-const collectionName = 'test';
-// Collection name is the name of the collection in which you want to import the data
-
-// Set MONGO_URL in .env file to your mongodb connection string
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }) 
-.then(async () => {
-    
-    xlsx2mongo.import(collectionName, showConsoleMessages)
-    .then(() => {
-        mongoose.connection.close();
-    }); // you can remove the .then() if you don't want to close the connection
-    
-    // Import function imports the entire excel file to the database
-
-    xlsx2mongo.add(collectionName, filePath, showConsoleMessages)
-    .then(() => {
-        mongoose.connection.close();
-    }); // you can remove the .then() if you don't want to close the connection
-    
-    // Add function adds the data from the excel file to the database
-    
-})
-.catch((err) => {
-    console.error('Error:', err);
-});
-
-```
-Check env_example file for more info - <a href="/tests/.env_example">env_example</a>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Usage
-
-```javascript
-const xlsx2mongo = require('xlsx-mongo');
-const mongoose = require('mongoose');
-require('dotenv').config()
-const path = require('path');
-
-const filePath = path.join(__dirname, 'Test2.xlsx');
-const showConsoleMessages = false;
-
-xlsx2mongo.init(filePath);
-
-const collectionName = 'test';
-
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-.then(async () => {
-    
-    xlsx2mongo.import(collectionName, showConsoleMessages)
-    .then(() => {
-        mongoose.connection.close();
-    }); // you can remove the .then() if you don't want to close the connection
-
-    xlsx2mongo.add(collectionName, filePath, showConsoleMessages)
-    .then(() => {
-        mongoose.connection.close();
-    }); // you can remove the .then() if you don't want to close the connection
-})
-.catch((err) => {
-    console.error('Error:', err);
-});
+3. Create a `.env` file in the root directory of the project and add the following environment variables:
+```shell
+   MONGO_URL=<your-mongodb-connection-url>
+   MONGO_COLLECTION=<your-mongodb-collection-name>
 ```
 
-Note: 
-1. Remember to set the MONGO_URL in .env file
-2. The collection name is the name of the collection in which you want to import the data
-3. The file path is the path to the excel file
-4. The showConsoleMessages is a boolean value which is used to show the console messages or not
-5. The init function is used to setup the file path
-6. The import function imports the entire excel file to the database 
-[ It will add duplicate data if the data already exists in the database ]
-7. The schema of the data is generated dynamically based on the first row of the excel file 
-[ The first row of the excel file should contain the names of the columns ]
+Example using Axios:
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+```javascript
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
 
-## For more information on how to use it visit
+const path = require('path');
+const filePath = path.join(__dirname, 'Test.xlsx');
 
-- [Github](https://github.com/crizmo/xlsx-mongo)
-- [Example](https://github.com/crizmo/xlsx-mongo/tree/main/tests)
+require('dotenv').config();
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+// Import data from XLSX file to MongoDB
+const importFile = async () => {
+  try {
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream('Test.xlsx'));
+    formData.append('mongoURL', process.env.MONGO_URL);
+    formData.append('collectionName', process.env.MONGO_COLLECTION);
 
-## Roadmap
+    const response = await axios.post('http://localhost:3000/import', formData, {
+      headers: formData.getHeaders(),
+    });
 
-- [ ] Add Changelog
-- [ ] Add Tests
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add More Functions
-- [ ] Documentation
-    - [ ] Website
-    - [ ] Examples
-    - [ ] Wiki
-- [ ] Add Support for more platforms
+    console.log(response.data);
+  } catch (error) {
+    console.error(error.response.data);
+  }
+};
 
-See the [open issues](https://github.com/crizmo/xlsx-mongo/issues) for a full list of proposed features (and known issues).
+importFile();
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+// Add data from XLSX file to existing MongoDB collection
+const addData = async () => {
+  try {
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream('Test.xlsx'));
+    formData.append('path', filePath);
+    formData.append('collectionName', 'test2');
+    formData.append('mongoURL', process.env.MONGO_URL);
 
-## Contributing
+    const response = await axios.post('http://localhost:3000/add', formData, {
+      headers: formData.getHeaders(),
+    });
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+    console.log(response.data);
+  } catch (error) {
+    console.error(error.response.data);
+  }
+};
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+addData();
+```
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Check https://github.com/crizmo/xlsx-mongo-api/blob/main/tests/test.js for detailed usage examples.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Installation
+1. Clone the repository:
+```shell
+   git clone https://github.com/crizmo/xlsx-mongo-api.git
+```
+
+2. Install dependencies:
+```shell
+   npm install
+```
+
+3. Create a `.env` file in the root directory of the project and add the following environment variables:
+```shell
+   MONGO_URL=<your-mongodb-connection-url>
+   MONGO_COLLECTION=<your-mongodb-collection-name>
+```
+
+4. Start the server:
+```shell
+   npm start
+```
+
+# Contributing
+
+Contributions are welcome! If you have any ideas, suggestions, or bug fixes, please open an issue or a pull request.
 
 
-<!-- LICENSE -->
-## License
+# License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Distributed under the MIT License. See LICENSE for more information.
+Contact
 
-## Contact
-Package Made by: `kurizu.taz` on discord <br>
-Github - [https://github.com/crizmo/xlsx-mongo](https://github.com/crizmo/xlsx-mongo)
+Package Maintainer: crizmo on GitHub
+Project Link: https://github.com/crizmo/xlsx-mongo-api

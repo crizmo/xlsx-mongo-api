@@ -17,6 +17,7 @@
     "fs": "^0.0.1-security",
     "mongoose": "^7.3.2",
     "multer": "^1.4.5-lts.1",
-    "xlsx-mongo": "^1.0.5"
+    "path": "^0.12.7",
+    "xlsx-mongo": "^1.0.6"
   }
 }

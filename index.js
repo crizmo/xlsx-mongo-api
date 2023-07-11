@@ -8,6 +8,12 @@ const fs = require('fs');
 const app = express();
 const upload = multer({ dest: 'uploads/' }); // Set the destination directory for uploaded files
 
+const port = 3000;
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+}); 
+
 app.get('/', (req, res) => {
   res.send('XLSX-Mongo API');
 });
@@ -65,11 +71,6 @@ app.post('/add', upload.single('file'), async (req, res) => {
     console.error(error);
     res.status(500).json({ message: 'An error occurred during data import' });
   }
-});
-
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
 });
 
 module.exports = app;

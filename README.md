@@ -41,7 +41,7 @@
 ### Usage
 1. Start the server by running npm start.
 
-2. Send a POST request to http://localhost:3000/import with the following parameters:
+2. Send a POST request to https://xlsxmongoapi.kurizu.repl.co/import with the following parameters:
 
   1. file: The XLSX file to import.
   2. collectionName (optional): The name of the collection to import/add the data to.<br> If not provided, it will use the filename as the collection name.
@@ -72,7 +72,7 @@ const importFile = async () => {
     formData.append('mongoURL', process.env.MONGO_URL);
     formData.append('collectionName', process.env.MONGO_COLLECTION);
 
-    const response = await axios.post('http://localhost:3000/import', formData, {
+    const response = await axios.post('https://xlsxmongoapi.kurizu.repl.co/import', formData, {
       headers: formData.getHeaders(),
     });
 
@@ -93,7 +93,7 @@ const addData = async () => {
     formData.append('collectionName', 'test2');
     formData.append('mongoURL', process.env.MONGO_URL);
 
-    const response = await axios.post('http://localhost:3000/add', formData, {
+    const response = await axios.post('https://xlsxmongoapi.kurizu.repl.co/add', formData, {
       headers: formData.getHeaders(),
     });
 
@@ -126,7 +126,7 @@ const importFile = async () => {
     formData.append('mongoURL', process.env.MONGO_URL);
     formData.append('collectionName', process.env.MONGO_COLLECTION);
 
-    const response = await axios.post('http://localhost:3000/import', formData, {
+    const response = await axios.post('https://xlsxmongoapi.kurizu.repl.co/import', formData, {
       headers: {
         'content-type': `multipart/form-data; boundary=${formData._boundary}`,
         'x-rapidapi-key': 'YOUR-RAPIDAPI-KEY',
@@ -152,7 +152,7 @@ const addData = async () => {
     formData.append('collectionName', 'test2');
     formData.append('mongoURL', process.env.MONGO_URL);
 
-    const response = await axios.post('http://localhost:3000/add', formData, {
+    const response = await axios.post('https://xlsxmongoapi.kurizu.repl.co/add', formData, {
       headers: {
         'content-type': `multipart/form-data; boundary=${formData._boundary}`,
         'x-rapidapi-key': 'YOUR-RAPIDAPI-KEY',
